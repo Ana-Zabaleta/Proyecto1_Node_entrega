@@ -49,8 +49,53 @@ const getMovieById = async (req, res, next) => {
     next(error);
   }
 };
+
+const getMovieByGenre = async (req, res, next) => {
+  try {
+    const genre = req.params.genre;
+    const movies = await Movie.find({ genre: genre });
+
+    if (movies.length > 0) {
+      res.status(200).json({
+        status: 200,
+        message: "ok",
+        data: movies,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: "No movies found for the specified genre",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getMovie2010 = async (req, res, next) => {
+  try {
+    const movies = await Movie.find({ year: { $gte: 2010 } });
+
+    if (movies.length > 0) {
+      res.status(200).json({
+        status: 200,
+        message: "ok",
+        data: movies,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: "No movies found released after 2010",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   getMovie,
   getMovieById,
   getMovieByTitle,
+  getMovieByGenre,
+  getMovie2010,
 };
